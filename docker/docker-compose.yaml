@@ -1,0 +1,16 @@
+services:
+  pie-tunes-recommendation-service:
+    image: pie-tunes-recommendation-service:latest
+    container_name: "pie-tunes-recommendation-service-prod"
+    networks:
+      - pie-tunes-network-prod
+    ports:
+      - "8081:8081"
+    restart: always
+    environment:
+      - NEO4J_URL=bolt://pie-tunes-neo4j-prod:7687
+
+networks:
+  pie-tunes-network-prod:
+    name: pie-tunes-network-prod
+    external: true

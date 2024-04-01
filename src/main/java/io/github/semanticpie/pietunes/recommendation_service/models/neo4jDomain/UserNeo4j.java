@@ -34,7 +34,7 @@ public class UserNeo4j {
     private Set<MusicTrack> likedTracks;
 
     @Relationship(type = "HAS_PLAYLIST", direction = Relationship.Direction.OUTGOING)
-    private List<Playlist> playlists;
+    private Set<Playlist> playlists;
 
     public void addPreferredGenre(MusicGenre genre) {
         if (preferredGenres == null) {

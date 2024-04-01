@@ -1,5 +1,6 @@
 package io.github.semanticpie.pietunes.recommendation_service.models.neo4jDomain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.data.neo4j.core.schema.RelationshipId;
 import org.springframework.data.neo4j.core.schema.RelationshipProperties;
@@ -8,25 +9,21 @@ import org.springframework.data.neo4j.core.schema.TargetNode;
 @RelationshipProperties
 @NoArgsConstructor
 @RequiredArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-public class PreferredGenre {
-
+@Builder
+public class ContainedTrack {
     @RelationshipId
+    @JsonIgnore
     private Long id;
+
 
     @TargetNode
     @NonNull
-    private MusicGenre genre;
+    private MusicTrack track;
 
     @NonNull
-    private Integer weight;
-
-    @Override
-    public String toString() {
-        return "PreferredGenre{" +
-                "weight=" + weight +
-                ", genre=" + genre +
-                '}';
-    }
+    @JsonIgnore
+    private Integer index;
 }

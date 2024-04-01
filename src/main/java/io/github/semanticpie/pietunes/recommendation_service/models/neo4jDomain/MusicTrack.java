@@ -1,5 +1,6 @@
 package io.github.semanticpie.pietunes.recommendation_service.models.neo4jDomain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -23,6 +24,7 @@ public class MusicTrack {
     private UUID uuid;
 
     @Version
+    @JsonIgnore
     private Long version;
 
     private String title;
@@ -36,9 +38,11 @@ public class MusicTrack {
     @Relationship(type = "IN_GENRE", direction = Relationship.Direction.OUTGOING)
     private Set<MusicGenre> genres;
 
-    @Relationship(type = "HAS_TRACK", direction = Relationship.Direction.INCOMING)
-    private MusicBand musicBand;
-
-    @Relationship(type = "CONTAINS", direction = Relationship.Direction.INCOMING)
-    private MusicAlbum musicAlbum;
+    @Override
+    public String toString() {
+        return "MusicTrack{" +
+                "genres=" + genres +
+                ", title='" + title + '\'' +
+                '}';
+    }
 }

@@ -19,4 +19,10 @@ public class MusicGenre {
     @NonNull
     private String name;
 
+    @Override
+    public String toString() {
+        return "MusicGenre{" +
+                "name='" + name + '\'' +
+                '}';
+    }
 }

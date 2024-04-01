@@ -23,18 +23,21 @@ repositories {
 }
 
 dependencies {
-    implementation ("org.springframework.boot:spring-boot-starter-data-neo4j")
+    implementation("org.springframework.boot:spring-boot-starter-data-neo4j")
 
-    implementation ("org.springframework.boot:spring-boot-starter-webflux")
-    implementation ("org.springframework.boot:spring-boot-devtools")
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
 
-    implementation ("org.springdoc:springdoc-openapi-starter-webflux-ui:2.4.0")
-    implementation ("org.springdoc:springdoc-openapi-starter-webflux-api:2.4.0")
+    implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.4.0")
+    implementation("org.springdoc:springdoc-openapi-starter-webflux-api:2.4.0")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 
-    compileOnly ("org.projectlombok:lombok")
-    annotationProcessor ("org.projectlombok:lombok")
+    implementation("org.mapstruct:mapstruct:1.5.5.Final")
+
+    compileOnly("org.projectlombok:lombok")
+    annotationProcessor("org.projectlombok:lombok")
+
+    annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
 }
 
 tasks.withType<Test> {

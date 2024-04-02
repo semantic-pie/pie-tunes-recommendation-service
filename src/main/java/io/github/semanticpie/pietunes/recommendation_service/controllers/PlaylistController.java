@@ -28,19 +28,18 @@ public class PlaylistController {
     private final RecommendationService recommendationService;
 
     @GetMapping("/playlists/random/generate")
-    @Parameter(in = ParameterIn.QUERY, name = "userUuid", schema = @Schema(type = "playlistUuid"))
+    @Parameter(in = ParameterIn.QUERY, name = "userUuid")
     public Mono<Playlist> generatePlaylist(@RequestParam UUID userUuid) {
         return userService.findUserById(userUuid).flatMap(recommendationService::generatePlaylist);
     }
 
     @GetMapping("/playlists/{uuid}")
-    @Parameter(in = ParameterIn.QUERY, name = "userUuid", schema = @Schema(type = "playlistUuid"))
     public Mono<Playlist> getPlaylist(@PathVariable("uuid") UUID uuid) {
         return recommendationService.findPlaylistById(uuid);
     }
 
     @GetMapping("/playlists/random/find-by-date")
-    @Parameter(in = ParameterIn.QUERY, name = "userUuid", schema = @Schema(type = "playlistUuid"))
+    @Parameter(in = ParameterIn.QUERY, name = "userUuid")
     public Flux<Playlist> getAllPlaylistListsByDate(@RequestParam UUID userUuid) {
         return recommendationService.findPlaylistsAndSortByDate(userUuid);
     }

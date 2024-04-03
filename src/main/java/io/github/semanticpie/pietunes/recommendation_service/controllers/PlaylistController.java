@@ -1,13 +1,9 @@
 package io.github.semanticpie.pietunes.recommendation_service.controllers;
 
-import io.github.semanticpie.pietunes.recommendation_service.models.neo4jDomain.MusicTrack;
 import io.github.semanticpie.pietunes.recommendation_service.models.neo4jDomain.Playlist;
-import io.github.semanticpie.pietunes.recommendation_service.repositories.TrackRepository;
-import io.github.semanticpie.pietunes.recommendation_service.services.RecommendationService;
-import io.github.semanticpie.pietunes.recommendation_service.services.UserService;
+import io.github.semanticpie.pietunes.recommendation_service.services.impl.RecommendationServiceImpl;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -20,17 +16,15 @@ import java.util.UUID;
 @RestController
 @CrossOrigin(origins = "*")
 @AllArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/recommendations/")
 public class PlaylistController {
 
-    private final UserService userService;
 
-    private final RecommendationService recommendationService;
+    private final RecommendationServiceImpl recommendationService;
 
-    @GetMapping("/playlists/random/generate")
-    @Parameter(in = ParameterIn.QUERY, name = "userUuid")
-    public Mono<Playlist> generatePlaylist(@RequestParam UUID userUuid) {
-        return userService.findUserById(userUuid).flatMap(recommendationService::generatePlaylist);
+    @GetMapping("/playlists/daily-mix/generate")
+    public Mono<String> generatePlaylist() {
+        return recommendationService.generateDailyMixPlaylists().then(Mono.just("GENERATED"));
     }
 
     @GetMapping("/playlists/{uuid}")
@@ -38,10 +32,11 @@ public class PlaylistController {
         return recommendationService.findPlaylistById(uuid);
     }
 
-    @GetMapping("/playlists/random/find-by-date")
+    @GetMapping("/playlists/daily-mix/find-by-date")
     @Parameter(in = ParameterIn.QUERY, name = "userUuid")
     public Flux<Playlist> getAllPlaylistListsByDate(@RequestParam UUID userUuid) {
         return recommendationService.findPlaylistsAndSortByDate(userUuid);
     }
+
 
 }

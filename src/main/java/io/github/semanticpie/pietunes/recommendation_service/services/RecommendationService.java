@@ -11,7 +11,6 @@ import java.util.UUID;
 
 public interface RecommendationService {
 
-    Mono<Playlist> generatePlaylist(UserNeo4j user);
 
     Mono<Playlist> findPlaylistById(UUID id);
 

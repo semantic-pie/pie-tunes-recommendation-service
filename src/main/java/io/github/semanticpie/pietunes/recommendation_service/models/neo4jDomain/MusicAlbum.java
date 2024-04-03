@@ -10,15 +10,15 @@ import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
+import org.springframework.lang.Nullable;
 
-import java.util.Set;
 import java.util.UUID;
 
-@Node("Track")
+@Node("Album")
 @RequiredArgsConstructor
 @Getter
 @Setter
-public class MusicTrack {
+public class MusicAlbum {
 
     @Id
     @GeneratedValue
@@ -28,30 +28,15 @@ public class MusicTrack {
     @JsonIgnore
     private Long version;
 
-    private String title;
+    private String name;
 
-    private String releaseYear;
+    @Nullable
+    private String description;
 
-    private Integer bitrate;
+    @Nullable
+    private int yearOfRecord;
 
-    private Long lengthInMilliseconds;
-
-    @Relationship(type = "IN_GENRE", direction = Relationship.Direction.OUTGOING)
-    private Set<MusicGenre> genres;
-
-    @Relationship(type = "HAS_TRACK", direction = Relationship.Direction.INCOMING)
+    @Relationship(type = "HAS_ALBUM", direction = Relationship.Direction.INCOMING)
     @JsonProperty("band")
     private MusicBand musicBand;
-
-    @Relationship(type = "CONTAINS", direction = Relationship.Direction.INCOMING)
-    @JsonProperty("album")
-    private MusicAlbum musicAlbum;
-
-    @Override
-    public String toString() {
-        return "MusicTrack{" +
-                "genres=" + genres +
-                ", title='" + title + '\'' +
-                '}';
-    }
 }

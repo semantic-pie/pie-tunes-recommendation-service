@@ -29,7 +29,7 @@ public interface TrackRepository extends ReactiveNeo4jRepository<MusicTrack, UUI
                              __nodeLabels__: labels(musicTrack_genres),
                              __elementId__: id(musicTrack_genres)
                          }],
-                         Track_CONTAINS_Album: [(musicTrack)-[:CONTAINS]->(album:Album) | album{
+                         Track_CONTAINS_Album: [(musicTrack)<-[:CONTAINS]-(album:Album) | album{
                              .description,
                              .name,
                              .uuid,
@@ -38,13 +38,13 @@ public interface TrackRepository extends ReactiveNeo4jRepository<MusicTrack, UUI
                              __nodeLabels__: labels(album),
                              __elementId__: id(album)
                          }],
-                          Track_HAS_TRACK_Band: [(musicTrack)-[:HAS_TRACK]->(band:Band) | band{
+                          Track_HAS_TRACK_Band: [(musicTrack)<-[:HAS_TRACK]-( musicTrack_musicBand:Band) | musicTrack_musicBand{
                             .description,
                             .name,
                             .uuid,
                             .version,
-                            __nodeLabels__: labels(band),
-                            __elementId__: id(band)
+                            __nodeLabels__: labels( musicTrack_musicBand),
+                            __elementId__: id( musicTrack_musicBand)
                          }]
                         }
                 ORDER BY rand() limit :#{#limit}

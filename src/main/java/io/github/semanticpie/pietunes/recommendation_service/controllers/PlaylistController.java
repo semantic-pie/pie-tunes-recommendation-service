@@ -1,5 +1,6 @@
 package io.github.semanticpie.pietunes.recommendation_service.controllers;
 
+import io.github.semanticpie.pietunes.recommendation_service.models.enums.PlaylistType;
 import io.github.semanticpie.pietunes.recommendation_service.models.neo4jDomain.Playlist;
 import io.github.semanticpie.pietunes.recommendation_service.services.impl.RecommendationServiceImpl;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -35,7 +36,13 @@ public class PlaylistController {
     @GetMapping("/playlists/daily-mix/find-by-date")
     @Parameter(in = ParameterIn.QUERY, name = "userUuid")
     public Flux<Playlist> getAllPlaylistListsByDate(@RequestParam UUID userUuid) {
-        return recommendationService.findPlaylistsAndSortByDate(userUuid);
+        return recommendationService.findPlaylistsAndSortByDate(userUuid, PlaylistType.DAILY_MIX.name());
+    }
+
+    @GetMapping("/playlists/genre-mix/find-by-date")
+    @Parameter(in = ParameterIn.QUERY, name = "userUuid")
+    public Flux<Playlist> getGenreMixPlaylistByDate(@RequestParam UUID userUuid) {
+        return recommendationService.findPlaylistsAndSortByDate(userUuid, PlaylistType.GENRE_MIX.name());
     }
 
 

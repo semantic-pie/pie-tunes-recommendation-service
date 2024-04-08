@@ -45,8 +45,8 @@ public class RecommendationServiceImpl implements RecommendationService {
     }
 
     @Override
-    public Flux<Playlist> findPlaylistsAndSortByDate(UUID personId) {
-        return playlistRepository.findAllByUserId(personId);
+    public Flux<Playlist> findPlaylistsAndSortByDate(UUID personId, String type) {
+        return playlistRepository.findAllByUserId(personId, type);
     }
 
 

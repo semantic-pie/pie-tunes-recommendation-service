@@ -14,5 +14,5 @@ public interface RecommendationService {
 
     Mono<Playlist> findPlaylistById(UUID id);
 
-    Flux<Playlist> findPlaylistsAndSortByDate(UUID personId);
+    Flux<Playlist> findPlaylistsAndSortByDate(UUID personId, String type);
 }

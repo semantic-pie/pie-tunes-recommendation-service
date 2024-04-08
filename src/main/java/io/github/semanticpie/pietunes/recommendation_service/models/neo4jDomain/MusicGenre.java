@@ -5,6 +5,8 @@ import org.springframework.data.annotation.Version;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 
+import java.util.Objects;
+
 @Node("Genre")
 @RequiredArgsConstructor
 @NoArgsConstructor
@@ -24,5 +26,18 @@ public class MusicGenre {
         return "MusicGenre{" +
                 "name='" + name + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MusicGenre that = (MusicGenre) o;
+        return Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(name);
     }
 }

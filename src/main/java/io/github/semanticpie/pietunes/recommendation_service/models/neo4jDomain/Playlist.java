@@ -48,6 +48,11 @@ public class Playlist {
     @Relationship(type = "HAS_PLAYLIST", direction = Relationship.Direction.INCOMING)
     private Set<UserNeo4j> users;
 
+
+    @JsonIgnore
+    @Relationship(type = "IN_GENRE", direction = Relationship.Direction.OUTGOING)
+    private MusicGenre genre;
+
     public Playlist(@NonNull String name, @NonNull PlaylistType type, @NonNull Set<UserNeo4j> users) {
         this.name = name;
         this.type = type;
@@ -55,6 +60,11 @@ public class Playlist {
         this.createdAt = Instant.now();
     }
 
+    public Playlist(@NonNull String name, @NonNull PlaylistType type) {
+        this.name = name;
+        this.type = type;
+        this.createdAt = Instant.now();
+    }
 
 
 

@@ -24,7 +24,7 @@ public class PlaylistController {
 
     @GetMapping("/playlists/daily-mix/generate")
     public Mono<String> generatePlaylist() {
-        return recommendationService.generateDailyMixPlaylists().then(Mono.just("GENERATED"));
+        return recommendationService.generatePlaylists().then(Mono.just("GENERATED"));
     }
 
     @GetMapping("/playlists/{uuid}")

@@ -40,12 +40,7 @@ public class DailyMixPlaylistService implements PlaylistService {
 
             Set<PreferredGenre> preferredGenres = user.getPreferredGenres();
 
-            Set<Playlist> userDailyMixPlaylists =
-                    user.getPlaylists().stream()
-                            .filter(playlist -> playlist.getType().equals(PlaylistType.DAILY_MIX))
-                            .collect(Collectors.toSet());
-
-            return playlistRepository.deleteAll(userDailyMixPlaylists).then(Mono.defer(() ->
+            return playlistRepository.deleteAllByType(PlaylistType.DAILY_MIX.name()).then(Mono.defer(() ->
                     Flux.fromIterable(Set.of(
                                     new Playlist("DailyMix 1", PlaylistType.DAILY_MIX, Set.of(user)),
                                     new Playlist("DailyMix 2", PlaylistType.DAILY_MIX, Set.of(user)),

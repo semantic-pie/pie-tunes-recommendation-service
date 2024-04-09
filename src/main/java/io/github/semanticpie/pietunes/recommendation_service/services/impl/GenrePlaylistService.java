@@ -16,7 +16,6 @@ import reactor.core.publisher.Mono;
 
 import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -37,22 +36,13 @@ public class GenrePlaylistService implements PlaylistService {
     @Transactional
     public Mono<Void> generate() {
 
-        Flux<Playlist> genreMixes = playlistRepository.findAll().filter(playlist -> playlist.getType().equals(PlaylistType.GENRE_MIX));
-
         AtomicInteger index = new AtomicInteger();
 
         Flux<UserNeo4j> users = userRepository.findAll();
 
-        Flux<MusicGenre> usersGenres = users
-                .map(userNeo4j -> userNeo4j.getPreferredGenres()
-                        .stream()
-                        .map(PreferredGenre::getGenre)
-                        .collect(Collectors.toSet()))
-                .flatMapIterable(set -> set)
-                .distinct();
+        Flux<MusicGenre> usersGenres = musicGenreRepository.findUsersPrefferedGenres();
 
-
-        return playlistRepository.deleteAll(genreMixes).then(Flux.defer(() ->
+        return playlistRepository.deleteAllByType(PlaylistType.GENRE_MIX.name()).then(Flux.defer(() ->
                         usersGenres
                                 .flatMap(genre -> {
 
@@ -67,7 +57,7 @@ public class GenrePlaylistService implements PlaylistService {
                                         playlist.setGenre(genre);
                                         return playlist;
                                     });
-                                })
+                                }).doOnNext(playlist -> log.info("Playlist {} created", playlist.getName()))
                 ).flatMap(playlist ->
                         users.filter(user ->
                                         user.getPreferredGenres()
@@ -81,7 +71,7 @@ public class GenrePlaylistService implements PlaylistService {
                                     playlist.setUsers(matchedUsers);
                                     return playlist;
                                 })
-                )
+                ).doFinally(playlists -> log.info("All playlists created"))
                 .collectList().flatMap(playlists -> playlistRepository.saveAll(playlists).then()));
     }
 }

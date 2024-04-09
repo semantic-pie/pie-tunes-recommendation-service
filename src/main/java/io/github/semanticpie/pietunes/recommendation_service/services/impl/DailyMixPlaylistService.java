@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.time.Instant;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -75,7 +74,6 @@ public class DailyMixPlaylistService implements PlaylistService {
                         index.incrementAndGet();
                         return track;
                     }).collect(Collectors.toSet());
-                    playlist.setCreatedAt(Instant.now());
                     playlist.setTracks(containedTracks);
                     return Mono.just(playlist);
                 });

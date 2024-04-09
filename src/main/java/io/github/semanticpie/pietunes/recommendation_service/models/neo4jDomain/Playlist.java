@@ -11,7 +11,6 @@ import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
-import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
 
@@ -29,7 +28,7 @@ public class Playlist {
 
     @NonNull
     @CreatedDate
-    private Instant createdAt;
+    private Long createdAt;
 
     @Version
     @JsonIgnore
@@ -57,13 +56,13 @@ public class Playlist {
         this.name = name;
         this.type = type;
         this.users = users;
-        this.createdAt = Instant.now();
+        this.createdAt = System.currentTimeMillis();
     }
 
     public Playlist(@NonNull String name, @NonNull PlaylistType type) {
         this.name = name;
         this.type = type;
-        this.createdAt = Instant.now();
+        this.createdAt = System.currentTimeMillis();
     }
 
 

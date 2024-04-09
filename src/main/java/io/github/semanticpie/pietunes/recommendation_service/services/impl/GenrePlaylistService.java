@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.time.Instant;
 import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -41,9 +41,19 @@ public class GenrePlaylistService implements PlaylistService {
 
         AtomicInteger index = new AtomicInteger();
 
+        Flux<UserNeo4j> users = userRepository.findAll();
+
+        Flux<MusicGenre> usersGenres = users
+                .map(userNeo4j -> userNeo4j.getPreferredGenres()
+                        .stream()
+                        .map(PreferredGenre::getGenre)
+                        .collect(Collectors.toSet()))
+                .flatMapIterable(set -> set)
+                .distinct();
+
 
         return playlistRepository.deleteAll(genreMixes).then(Flux.defer(() ->
-                        musicGenreRepository.findAll()
+                        usersGenres
                                 .flatMap(genre -> {
 
                                     Playlist playlist = new Playlist(genre.getName().toUpperCase() + "Mix", PlaylistType.GENRE_MIX);
@@ -53,15 +63,13 @@ public class GenrePlaylistService implements PlaylistService {
                                         index.incrementAndGet();
                                         return track;
                                     }).collectList().map(tracks -> {
-                                        playlist.setCreatedAt(Instant.now());
                                         playlist.setTracks(new HashSet<>(tracks));
                                         playlist.setGenre(genre);
                                         return playlist;
                                     });
                                 })
                 ).flatMap(playlist ->
-                        userRepository.findAll()
-                                .filter(user ->
+                        users.filter(user ->
                                         user.getPreferredGenres()
                                                 .stream()
                                                 .map(PreferredGenre::getGenre)
@@ -69,8 +77,8 @@ public class GenrePlaylistService implements PlaylistService {
                                 )
                                 .collectList()
                                 .map(HashSet::new)
-                                .map(users -> {
-                                    playlist.setUsers(users);
+                                .map(matchedUsers -> {
+                                    playlist.setUsers(matchedUsers);
                                     return playlist;
                                 })
                 )

@@ -26,7 +26,7 @@ public class RecommendationServiceImpl implements RecommendationService {
 
     public Mono<Void> generatePlaylists() {
 
-      return genrePlaylistService.generate().then();
+      return dailyMixPlaylistService.generate().then(genrePlaylistService.generate()).then();
     }
 
     private Playlist sortTracksByIndex(Playlist playlist) {

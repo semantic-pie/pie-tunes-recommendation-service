@@ -6,10 +6,7 @@ import io.github.semanticpie.pietunes.recommendation_service.models.enums.Playli
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Version;
-import org.springframework.data.neo4j.core.schema.GeneratedValue;
-import org.springframework.data.neo4j.core.schema.Id;
-import org.springframework.data.neo4j.core.schema.Node;
-import org.springframework.data.neo4j.core.schema.Relationship;
+import org.springframework.data.neo4j.core.schema.*;
 
 import java.util.Set;
 import java.util.UUID;
@@ -39,10 +36,12 @@ public class Playlist {
 
     @NonNull
     private PlaylistType type;
-
+    
+    @DynamicLabels
     @Relationship(type = "CONTAINS", direction = Relationship.Direction.OUTGOING)
     private Set<ContainedTrack> tracks;
 
+    @DynamicLabels
     @JsonIgnore
     @Relationship(type = "HAS_PLAYLIST", direction = Relationship.Direction.INCOMING)
     private Set<UserNeo4j> users;

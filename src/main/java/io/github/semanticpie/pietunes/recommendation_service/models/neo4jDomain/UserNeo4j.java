@@ -2,6 +2,7 @@ package io.github.semanticpie.pietunes.recommendation_service.models.neo4jDomain
 
 import lombok.*;
 import org.springframework.data.annotation.Version;
+import org.springframework.data.neo4j.core.schema.DynamicLabels;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
@@ -26,13 +27,15 @@ public class UserNeo4j {
 
     @Version
     private Long version;
-
+    @DynamicLabels
     @Relationship(type = "PREFERS_GENRE", direction = Relationship.Direction.OUTGOING)
     private Set<PreferredGenre> preferredGenres;
 
+    @DynamicLabels
     @Relationship(type = "LIKES", direction = Relationship.Direction.OUTGOING)
     private Set<LikedTrack> likedTracks;
 
+    @DynamicLabels
     @Relationship(type = "HAS_PLAYLIST", direction = Relationship.Direction.OUTGOING)
     private Set<Playlist> playlists;
 
@@ -43,7 +46,6 @@ public class UserNeo4j {
         var genreRelation = new PreferredGenre(genre, INITIAL_GENRE_WEIGHT);
         preferredGenres.add(genreRelation);
     }
-
 
 
 }

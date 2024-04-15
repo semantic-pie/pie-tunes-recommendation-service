@@ -2,6 +2,7 @@ package io.github.semanticpie.pietunes.recommendation_service.models.mappers;
 
 import io.github.semanticpie.pietunes.recommendation_service.models.dtos.MusicTrackDTO;
 import io.github.semanticpie.pietunes.recommendation_service.models.neo4j.ContainedTrack;
+import io.github.semanticpie.pietunes.recommendation_service.models.neo4j.MusicGenre;
 import io.github.semanticpie.pietunes.recommendation_service.models.neo4j.MusicTrack;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -21,6 +22,7 @@ public interface MusicTrackMapper {
     @Mapping(target = "releaseYear", source = "releaseYear")
     @Mapping(target = "bitrate", source = "bitrate")
     @Mapping(target = "lengthInMilliseconds", source = "lengthInMilliseconds")
+    @Mapping(target = "genres", source = "genres", qualifiedByName =  "mapGenresToString")
     @Mapping(target = "musicAlbum", source = "musicAlbum", qualifiedByName = "MusicAlbumToDto")
     @Mapping(target = "musicBand", source = "musicBand", qualifiedByName = "MusicBandToDto")
     MusicTrackDTO toDTO(MusicTrack source);
@@ -29,6 +31,13 @@ public interface MusicTrackMapper {
     default List<MusicTrackDTO> convertContainedTracksToMusicTrackDTO(Set<ContainedTrack> source) {
         return source.stream().map(ContainedTrack::getTrack).map(this::toDTO).toList();
     }
+
+    @Named("mapGenresToString")
+    default List<String> mapGenresToString(Set<MusicGenre> source){
+        return source.stream().map(MusicGenre::getName).toList();
+    }
+
+
 
 
 }

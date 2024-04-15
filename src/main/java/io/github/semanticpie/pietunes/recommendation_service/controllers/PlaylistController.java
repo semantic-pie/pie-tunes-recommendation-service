@@ -1,8 +1,10 @@
 package io.github.semanticpie.pietunes.recommendation_service.controllers;
 
+import io.github.semanticpie.pietunes.recommendation_service.models.dtos.NestedPlaylistDTO;
 import io.github.semanticpie.pietunes.recommendation_service.models.enums.PlaylistType;
-import io.github.semanticpie.pietunes.recommendation_service.models.neo4jDomain.Playlist;
-import io.github.semanticpie.pietunes.recommendation_service.services.impl.RecommendationServiceImpl;
+import io.github.semanticpie.pietunes.recommendation_service.models.dtos.PlaylistDTO;
+import io.github.semanticpie.pietunes.recommendation_service.models.mappers.PlaylistMapper;
+import io.github.semanticpie.pietunes.recommendation_service.services.RecommendationService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import lombok.AllArgsConstructor;
@@ -21,7 +23,9 @@ import java.util.UUID;
 public class PlaylistController {
 
 
-    private final RecommendationServiceImpl recommendationService;
+    private final RecommendationService recommendationService;
+
+    private final PlaylistMapper mapper;
 
     @GetMapping("/playlists/daily-mix/generate")
     public Mono<String> generatePlaylist() {
@@ -29,20 +33,20 @@ public class PlaylistController {
     }
 
     @GetMapping("/playlists/{uuid}")
-    public Mono<Playlist> getPlaylist(@PathVariable("uuid") UUID uuid) {
-        return recommendationService.findPlaylistById(uuid);
+    public Mono<PlaylistDTO> getPlaylist(@PathVariable("uuid") UUID uuid) {
+        return recommendationService.findPlaylistById(uuid).map(mapper::toDTO);
     }
 
     @GetMapping("/playlists/daily-mix/find-by-date")
     @Parameter(in = ParameterIn.QUERY, name = "userUuid")
-    public Flux<Playlist> getAllPlaylistListsByDate(@RequestParam UUID userUuid) {
-        return recommendationService.findPlaylistsAndSortByDate(userUuid, PlaylistType.DAILY_MIX.name());
+    public Flux<NestedPlaylistDTO> getAllPlaylistListsByDate(@RequestParam UUID userUuid) {
+        return recommendationService.findPlaylistsAndSortByDate(userUuid, PlaylistType.DAILY_MIX.name()).map(mapper::toNestedPlaylistDTO);
     }
 
     @GetMapping("/playlists/genre-mix/find-by-date")
     @Parameter(in = ParameterIn.QUERY, name = "userUuid")
-    public Flux<Playlist> getGenreMixPlaylistByDate(@RequestParam UUID userUuid) {
-        return recommendationService.findPlaylistsAndSortByDate(userUuid, PlaylistType.GENRE_MIX.name());
+    public Flux<NestedPlaylistDTO> getGenreMixPlaylistByDate(@RequestParam UUID userUuid) {
+        return recommendationService.findPlaylistsAndSortByDate(userUuid, PlaylistType.GENRE_MIX.name()).map(mapper::toNestedPlaylistDTO);
     }
 
 

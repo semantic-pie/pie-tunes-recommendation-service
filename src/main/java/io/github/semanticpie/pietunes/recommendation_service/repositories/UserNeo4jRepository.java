@@ -1,7 +1,7 @@
 package io.github.semanticpie.pietunes.recommendation_service.repositories;
 
 
-import io.github.semanticpie.pietunes.recommendation_service.models.neo4jDomain.UserNeo4j;
+import io.github.semanticpie.pietunes.recommendation_service.models.neo4j.UserNeo4j;
 import org.springframework.data.neo4j.repository.ReactiveNeo4jRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;

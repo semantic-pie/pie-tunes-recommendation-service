@@ -1,6 +1,6 @@
 package io.github.semanticpie.pietunes.recommendation_service.repositories;
 
-import io.github.semanticpie.pietunes.recommendation_service.models.neo4jDomain.Playlist;
+import io.github.semanticpie.pietunes.recommendation_service.models.neo4j.Playlist;
 import org.springframework.data.neo4j.repository.ReactiveNeo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;

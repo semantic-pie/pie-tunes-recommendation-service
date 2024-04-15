@@ -1,7 +1,6 @@
-package io.github.semanticpie.pietunes.recommendation_service.models.neo4jDomain;
+package io.github.semanticpie.pietunes.recommendation_service.models.neo4j;
 
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.neo4j.core.schema.RelationshipId;
 import org.springframework.data.neo4j.core.schema.RelationshipProperties;
 import org.springframework.data.neo4j.core.schema.TargetNode;
@@ -11,16 +10,23 @@ import org.springframework.data.neo4j.core.schema.TargetNode;
 @RequiredArgsConstructor
 @Getter
 @Setter
-public class LikedTrack {
+public class PreferredGenre {
 
     @RelationshipId
     private Long id;
 
     @TargetNode
     @NonNull
-    private MusicTrack track;
+    private MusicGenre genre;
 
     @NonNull
-    @CreatedDate
-    private Long createdAt;
+    private Integer weight;
+
+    @Override
+    public String toString() {
+        return "PreferredGenre{" +
+                "weight=" + weight +
+                ", genre=" + genre +
+                '}';
+    }
 }

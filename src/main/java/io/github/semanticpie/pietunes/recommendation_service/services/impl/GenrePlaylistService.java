@@ -1,7 +1,12 @@
 package io.github.semanticpie.pietunes.recommendation_service.services.impl;
 
 import io.github.semanticpie.pietunes.recommendation_service.models.enums.PlaylistType;
-import io.github.semanticpie.pietunes.recommendation_service.models.neo4jDomain.*;
+
+import io.github.semanticpie.pietunes.recommendation_service.models.neo4j.ContainedTrack;
+import io.github.semanticpie.pietunes.recommendation_service.models.neo4j.MusicGenre;
+import io.github.semanticpie.pietunes.recommendation_service.models.neo4j.Playlist;
+import io.github.semanticpie.pietunes.recommendation_service.models.neo4j.UserNeo4j;
+import io.github.semanticpie.pietunes.recommendation_service.models.neo4j.PreferredGenre;
 import io.github.semanticpie.pietunes.recommendation_service.repositories.MusicGenreRepository;
 import io.github.semanticpie.pietunes.recommendation_service.repositories.PlaylistRepository;
 import io.github.semanticpie.pietunes.recommendation_service.repositories.TrackRepository;

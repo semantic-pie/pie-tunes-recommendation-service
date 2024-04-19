@@ -9,6 +9,7 @@ services:
     restart: always
     environment:
       - NEO4J_URL=bolt://pie-tunes-neo4j-prod:7687
+      - JWT_TOKEN_SECRET_KEY=${JWT_TOKEN_SECRET_KEY}
 
 networks:
   pie-tunes-network-prod:

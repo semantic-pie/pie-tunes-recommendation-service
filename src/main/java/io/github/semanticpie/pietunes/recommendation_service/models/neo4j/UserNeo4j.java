@@ -39,13 +39,4 @@ public class UserNeo4j {
     @Relationship(type = "HAS_PLAYLIST", direction = Relationship.Direction.OUTGOING)
     private Set<Playlist> playlists;
 
-    public void addPreferredGenre(MusicGenre genre) {
-        if (preferredGenres == null) {
-            preferredGenres = new HashSet<>();
-        }
-        var genreRelation = new PreferredGenre(genre, INITIAL_GENRE_WEIGHT);
-        preferredGenres.add(genreRelation);
-    }
-
-
 }

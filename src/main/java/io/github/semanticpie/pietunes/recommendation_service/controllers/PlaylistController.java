@@ -5,11 +5,11 @@ import io.github.semanticpie.pietunes.recommendation_service.models.enums.Playli
 import io.github.semanticpie.pietunes.recommendation_service.models.dtos.PlaylistDTO;
 import io.github.semanticpie.pietunes.recommendation_service.models.mappers.PlaylistMapper;
 import io.github.semanticpie.pietunes.recommendation_service.services.RecommendationService;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.github.semanticpie.pietunes.recommendation_service.services.jwt.JwtTokenProvider;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -25,6 +25,8 @@ public class PlaylistController {
 
     private final RecommendationService recommendationService;
 
+    private final JwtTokenProvider jwtTokenProvider;
+
     private final PlaylistMapper mapper;
 
     @GetMapping("/playlists/daily-mix/generate")
@@ -38,14 +40,16 @@ public class PlaylistController {
     }
 
     @GetMapping("/playlists/daily-mix/find-by-date")
-    @Parameter(in = ParameterIn.QUERY, name = "userUuid")
-    public Flux<NestedPlaylistDTO> getAllPlaylistListsByDate(@RequestParam UUID userUuid) {
+    public Flux<NestedPlaylistDTO> getAllPlaylistListsByDate(ServerWebExchange exchange) {
+        String jwtToken = jwtTokenProvider.getJwtTokenFromRequest(exchange.getRequest());
+        UUID userUuid = UUID.fromString(jwtTokenProvider.getUUID(jwtToken));
         return recommendationService.findPlaylistsAndSortByDate(userUuid, PlaylistType.DAILY_MIX.name()).map(mapper::toNestedPlaylistDTO);
     }
 
     @GetMapping("/playlists/genre-mix/find-by-date")
-    @Parameter(in = ParameterIn.QUERY, name = "userUuid")
-    public Flux<NestedPlaylistDTO> getGenreMixPlaylistByDate(@RequestParam UUID userUuid) {
+    public Flux<NestedPlaylistDTO> getGenreMixPlaylistByDate(ServerWebExchange exchange) {
+        String jwtToken = jwtTokenProvider.getJwtTokenFromRequest(exchange.getRequest());
+        UUID userUuid = UUID.fromString(jwtTokenProvider.getUUID(jwtToken));
         return recommendationService.findPlaylistsAndSortByDate(userUuid, PlaylistType.GENRE_MIX.name()).map(mapper::toNestedPlaylistDTO);
     }
 

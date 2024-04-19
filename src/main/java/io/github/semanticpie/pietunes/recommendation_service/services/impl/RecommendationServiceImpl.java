@@ -29,21 +29,6 @@ public class RecommendationServiceImpl implements RecommendationService {
       return dailyMixPlaylistService.generate().then(genrePlaylistService.generate()).then();
     }
 
-    private Playlist sortTracksByIndex(Playlist playlist) {
-        assert playlist.getTracks() != null;
-        playlist.setTracks(
-                playlist.getTracks()
-                        .stream()
-                        .sorted(Comparator.comparing(ContainedTrack::getIndex))
-                        .collect(Collectors.toCollection(LinkedHashSet::new)));
-        return playlist;
-    }
-
-    @Override
-    public Mono<Playlist> findPlaylistById(UUID id) {
-        return playlistRepository.findById(id).map(this::sortTracksByIndex);
-    }
-
     @Override
     public Flux<Playlist> findPlaylistsAndSortByDate(UUID personId, String type) {
         return playlistRepository.findAllByUserId(personId, type);

@@ -20,4 +20,10 @@ public interface PlaylistRepository extends ReactiveNeo4jRepository<Playlist, UU
 
     Mono<Void> deleteAllByType(@Param("type") String type);
 
+    @Query("""
+            MATCH (:User {uuid: :#{#userId}})-[r:HAS_PLAYLIST]-(:Playlist {uuid: :#{#playlistId}})
+            RETURN COUNT(r) > 0 AS relationship_exists
+            """)
+    Mono<Boolean> userHasPlaylist(@Param("userId") UUID userId, @Param("playlistId") UUID playlistId);
+
 }

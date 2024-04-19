@@ -11,7 +11,7 @@ import io.github.semanticpie.pietunes.recommendation_service.repositories.MusicG
 import io.github.semanticpie.pietunes.recommendation_service.repositories.PlaylistRepository;
 import io.github.semanticpie.pietunes.recommendation_service.repositories.TrackRepository;
 import io.github.semanticpie.pietunes.recommendation_service.repositories.UserNeo4jRepository;
-import io.github.semanticpie.pietunes.recommendation_service.services.PlaylistService;
+import io.github.semanticpie.pietunes.recommendation_service.services.GeneratedPlaylistService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class GenrePlaylistService implements PlaylistService {
+public class GenrePlaylistService implements GeneratedPlaylistService {
 
     private final int PLAYLIST_SIZE = 9;
 

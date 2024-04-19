@@ -6,8 +6,10 @@ import io.github.semanticpie.pietunes.recommendation_service.models.neo4j.MusicT
 import org.springframework.data.neo4j.repository.ReactiveNeo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 
+import java.util.List;
 import java.util.UUID;
 
 
@@ -22,4 +24,6 @@ public interface TrackRepository extends ReactiveNeo4jRepository<MusicTrack, UUI
             """)
     Flux<MusicTrack> findRandomMusicTrackByGenre(@Param("musicGenre") MusicGenre musicGenre, @Param("limit") int limit);
 
+    @Transactional
+    Flux<MusicTrack> findAllByUuidIn(List<UUID> uuids);
 }

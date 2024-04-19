@@ -8,7 +8,7 @@ import io.github.semanticpie.pietunes.recommendation_service.models.neo4j.Prefer
 import io.github.semanticpie.pietunes.recommendation_service.repositories.PlaylistRepository;
 import io.github.semanticpie.pietunes.recommendation_service.repositories.TrackRepository;
 import io.github.semanticpie.pietunes.recommendation_service.repositories.UserNeo4jRepository;
-import io.github.semanticpie.pietunes.recommendation_service.services.PlaylistService;
+import io.github.semanticpie.pietunes.recommendation_service.services.GeneratedPlaylistService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class DailyMixPlaylistService implements PlaylistService {
+public class DailyMixPlaylistService implements GeneratedPlaylistService {
 
     private final int PLAYLIST_SIZE = 9;
 

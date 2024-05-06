@@ -64,8 +64,8 @@ public class GenrePlaylistService implements GeneratedPlaylistService {
                         ).map(playlist -> {
                             playlist.setUsers(Set.of(user));
                             return playlist;
-                        })
-                        .flatMap(playlist -> playlistRepository.save(playlist))
+                        }).collectList()
+                        .flatMap(playlists -> playlistRepository.saveAll(playlists).then())
                         .doFinally(playlists -> log.info("All playlists created")).then());
     }
 }

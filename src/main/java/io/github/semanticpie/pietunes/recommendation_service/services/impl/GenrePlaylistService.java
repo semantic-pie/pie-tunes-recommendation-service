@@ -49,7 +49,7 @@ public class GenrePlaylistService implements GeneratedPlaylistService {
                         .map(PreferredGenre::getGenre)
                         .flatMap(genre -> {
 
-                            Playlist playlist = new Playlist(genre.getName().toUpperCase() + "Mix", PlaylistType.GENRE_MIX);
+                            Playlist playlist = new Playlist(genre.getName().toUpperCase() + " Mix", PlaylistType.GENRE_MIX);
 
                             return trackRepository.findRandomMusicTrackByGenre(genre, PLAYLIST_SIZE).map(t -> {
                                 ContainedTrack track = ContainedTrack.builder().track(t).index(index.get()).build();

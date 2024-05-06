@@ -30,7 +30,7 @@ public class RecommendationServiceImpl implements RecommendationService {
     @Override
     public Mono<Void> generatePlaylists(UUID uuid) {
         return userNeo4jRepository.findUserNeo4jByUuid(uuid)
-                .map(user -> dailyMixPlaylistService.generate(user)
+                .flatMap(user -> dailyMixPlaylistService.generate(user)
                 .then(genrePlaylistService.generate(user))).then();
     }
 

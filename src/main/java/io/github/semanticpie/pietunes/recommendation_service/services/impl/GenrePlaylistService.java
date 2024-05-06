@@ -20,6 +20,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
@@ -39,44 +40,31 @@ public class GenrePlaylistService implements GeneratedPlaylistService {
 
     @Override
     @Transactional
-    public Mono<Void> generate() {
+    public Mono<Void> generate(UserNeo4j user) {
 
         AtomicInteger index = new AtomicInteger();
 
-        Flux<UserNeo4j> users = userRepository.findAll();
+        return playlistRepository.deleteAllByTypeAndUser(PlaylistType.GENRE_MIX.name(), user.getUuid())
+                .then(Flux.fromIterable(user.getPreferredGenres())
+                        .map(PreferredGenre::getGenre)
+                        .flatMap(genre -> {
 
-        Flux<MusicGenre> usersGenres = musicGenreRepository.findUsersPrefferedGenres();
+                            Playlist playlist = new Playlist(genre.getName().toUpperCase() + "Mix", PlaylistType.GENRE_MIX);
 
-        return playlistRepository.deleteAllByType(PlaylistType.GENRE_MIX.name()).then(Flux.defer(() ->
-                        usersGenres
-                                .flatMap(genre -> {
-
-                                    Playlist playlist = new Playlist(genre.getName().toUpperCase() + "Mix", PlaylistType.GENRE_MIX);
-
-                                    return trackRepository.findRandomMusicTrackByGenre(genre, PLAYLIST_SIZE).map(t -> {
-                                        ContainedTrack track = ContainedTrack.builder().track(t).index(index.get()).build();
-                                        index.incrementAndGet();
-                                        return track;
-                                    }).collectList().map(tracks -> {
-                                        playlist.setTracks(new HashSet<>(tracks));
-                                        playlist.setGenre(genre);
-                                        return playlist;
-                                    });
-                                }).doOnNext(playlist -> log.info("Playlist {} created", playlist.getName()))
-                ).flatMap(playlist ->
-                        users.filter(user ->
-                                        user.getPreferredGenres()
-                                                .stream()
-                                                .map(PreferredGenre::getGenre)
-                                                .toList().contains(playlist.getGenre())
-                                )
-                                .collectList()
-                                .map(HashSet::new)
-                                .map(matchedUsers -> {
-                                    playlist.setUsers(matchedUsers);
-                                    return playlist;
-                                })
-                ).doFinally(playlists -> log.info("All playlists created"))
-                .collectList().flatMap(playlists -> playlistRepository.saveAll(playlists).then()));
+                            return trackRepository.findRandomMusicTrackByGenre(genre, PLAYLIST_SIZE).map(t -> {
+                                ContainedTrack track = ContainedTrack.builder().track(t).index(index.get()).build();
+                                index.incrementAndGet();
+                                return track;
+                            }).collectList().map(tracks -> {
+                                playlist.setTracks(new HashSet<>(tracks));
+                                playlist.setGenre(genre);
+                                return playlist;
+                            });
+                        }).doOnNext(playlist -> log.info("Playlist {} created", playlist.getName())
+                        ).map(playlist -> {
+                            playlist.setUsers(Set.of(user));
+                            return playlist;
+                        }).doFinally(playlists -> log.info("All playlists created"))
+                        .map(playlist -> playlistRepository.save(playlist)).then());
     }
 }

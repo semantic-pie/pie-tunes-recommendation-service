@@ -3,6 +3,7 @@ package io.github.semanticpie.pietunes.recommendation_service.services.impl;
 import io.github.semanticpie.pietunes.recommendation_service.models.neo4j.ContainedTrack;
 import io.github.semanticpie.pietunes.recommendation_service.models.neo4j.Playlist;
 import io.github.semanticpie.pietunes.recommendation_service.repositories.PlaylistRepository;
+import io.github.semanticpie.pietunes.recommendation_service.repositories.UserNeo4jRepository;
 import io.github.semanticpie.pietunes.recommendation_service.services.RecommendationService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,9 +25,13 @@ public class RecommendationServiceImpl implements RecommendationService {
 
     PlaylistRepository playlistRepository;
 
+    UserNeo4jRepository userNeo4jRepository;
+
     @Override
-    public Mono<Void> generatePlaylists() {
-      return dailyMixPlaylistService.generate().then(genrePlaylistService.generate()).then();
+    public Mono<Void> generatePlaylists(UUID uuid) {
+        return userNeo4jRepository.findUserNeo4jByUuid(uuid)
+                .map(user -> dailyMixPlaylistService.generate(user)
+                .then(genrePlaylistService.generate(user))).then();
     }
 
     @Override

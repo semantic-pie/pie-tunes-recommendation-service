@@ -5,6 +5,7 @@ import io.github.semanticpie.pietunes.recommendation_service.models.enums.Playli
 import io.github.semanticpie.pietunes.recommendation_service.models.neo4j.ContainedTrack;
 import io.github.semanticpie.pietunes.recommendation_service.models.neo4j.Playlist;
 import io.github.semanticpie.pietunes.recommendation_service.models.neo4j.PreferredGenre;
+import io.github.semanticpie.pietunes.recommendation_service.models.neo4j.UserNeo4j;
 import io.github.semanticpie.pietunes.recommendation_service.repositories.PlaylistRepository;
 import io.github.semanticpie.pietunes.recommendation_service.repositories.TrackRepository;
 import io.github.semanticpie.pietunes.recommendation_service.repositories.UserNeo4jRepository;
@@ -35,23 +36,18 @@ public class DailyMixPlaylistService implements GeneratedPlaylistService {
 
     @Override
     @Transactional
-    public Mono<Void> generate() {
-
-        return userRepository.findAll().flatMap(user -> {
-
-            Set<PreferredGenre> preferredGenres = user.getPreferredGenres();
-
-            return playlistRepository.deleteAllByType(PlaylistType.DAILY_MIX.name()).then(Mono.defer(() ->
-                    Flux.fromIterable(Set.of(
-                                    new Playlist("DailyMix 1", PlaylistType.DAILY_MIX, Set.of(user)),
-                                    new Playlist("DailyMix 2", PlaylistType.DAILY_MIX, Set.of(user)),
-                                    new Playlist("DailyMix 3", PlaylistType.DAILY_MIX, Set.of(user)),
-                                    new Playlist("DailyMix 4", PlaylistType.DAILY_MIX, Set.of(user)),
-                                    new Playlist("DailyMix 5", PlaylistType.DAILY_MIX, Set.of(user))))
-                            .flatMap(playlist -> generatePlaylistByGenres(preferredGenres, playlist)).collectList()
-                            .flatMap(playlist -> playlistRepository.saveAll(playlist).then())
-            )).then();
-        }).then();
+    public Mono<Void> generate(UserNeo4j user) {
+        Set<PreferredGenre> preferredGenres = user.getPreferredGenres();
+        return playlistRepository.deleteAllByTypeAndUser(PlaylistType.DAILY_MIX.name(), user.getUuid()).then(Mono.defer(() ->
+                Flux.fromIterable(Set.of(
+                                new Playlist("DailyMix 1", PlaylistType.DAILY_MIX, Set.of(user)),
+                                new Playlist("DailyMix 2", PlaylistType.DAILY_MIX, Set.of(user)),
+                                new Playlist("DailyMix 3", PlaylistType.DAILY_MIX, Set.of(user)),
+                                new Playlist("DailyMix 4", PlaylistType.DAILY_MIX, Set.of(user)),
+                                new Playlist("DailyMix 5", PlaylistType.DAILY_MIX, Set.of(user))))
+                        .flatMap(playlist -> generatePlaylistByGenres(preferredGenres, playlist)).collectList()
+                        .flatMap(playlist -> playlistRepository.saveAll(playlist).then())
+        )).then();
     }
 
     private Mono<Playlist> generatePlaylistByGenres(Set<PreferredGenre> preferredGenres, Playlist playlist) {

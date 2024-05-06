@@ -18,7 +18,10 @@ public interface PlaylistRepository extends ReactiveNeo4jRepository<Playlist, UU
             """)
     Flux<Playlist> findAllByUserId(@Param("userId") UUID userId, @Param("type") String type);
 
-    Mono<Void> deleteAllByType(@Param("type") String type);
+    @Query("""
+                MATCH (n:Playlist {type: :#{#type}})<-[:HAS_PLAYLIST]-(user:User {uuid: :#{#user_uuid}}) DETACH DELETE n
+            """)
+    Mono<Void> deleteAllByTypeAndUser(@Param("type") String type, @Param("user_uuid") UUID uuid);
 
     @Query("""
             MATCH (:User {uuid: :#{#userId}})-[r:HAS_PLAYLIST]-(:Playlist {uuid: :#{#playlistId}})

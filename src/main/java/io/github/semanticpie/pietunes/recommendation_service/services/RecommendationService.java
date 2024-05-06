@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface RecommendationService {
 
-    Mono<Void> generatePlaylists();
+    Mono<Void> generatePlaylists(UUID uuid);
 
     Flux<Playlist> findPlaylistsAndSortByDate(UUID personId, String type);
 }

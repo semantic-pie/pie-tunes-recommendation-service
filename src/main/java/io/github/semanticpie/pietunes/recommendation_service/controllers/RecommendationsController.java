@@ -30,8 +30,10 @@ public class RecommendationsController {
     private final PlaylistMapper mapper;
 
     @GetMapping("/playlists/daily-mix/generate")
-    public Mono<String> generatePlaylist() {
-        return recommendationService.generatePlaylists().then(Mono.just("GENERATED"));
+    public Mono<String> generatePlaylist(ServerWebExchange exchange) {
+        String jwtToken = jwtTokenProvider.getJwtTokenFromRequest(exchange.getRequest());
+        UUID userUuid = UUID.fromString(jwtTokenProvider.getUUID(jwtToken));
+        return recommendationService.generatePlaylists(userUuid).then(Mono.just("GENERATED"));
     }
 
     @GetMapping("/playlists/daily-mix/find-by-date")

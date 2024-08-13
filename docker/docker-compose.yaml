@@ -14,4 +14,3 @@ services:
 networks:
   pie-tunes-network-prod:
     name: pie-tunes-network-prod
-    external: true

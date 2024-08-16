@@ -8,9 +8,11 @@ services:
       - "8081:8081"
     restart: always
     environment:
-      - NEO4J_URL=bolt://pie-tunes-neo4j-prod:7687
       - JWT_TOKEN_SECRET_KEY=${JWT_TOKEN_SECRET_KEY}
       - UI_SERVER_URL=${UI_SERVER_URL}
+      - NEO4J_URL=${NEO4J_URL}
+      - NEO4J_USERNAME=${NEO4J_USERNAME}
+      - NEO4J_PASSWORD=${NEO4J_PASSWORD}
 
 networks:
   pie-tunes-network-prod:
